@@ -1,0 +1,115 @@
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useInterview } from '../hooks/useInterview.js'
+import '../style/interview.scss'
+
+const Interview = () => {
+	const [activeSection, setActiveSection] = useState('technical')
+	const { interviewId } = useParams()
+	const { loading, report, getReportById } = useInterview()
+
+	useEffect(() => {
+		if (interviewId) getReportById(interviewId)
+	}, [interviewId])
+
+	if (loading || !report) {
+		return <main className="interview-page interview-state">Loading interview report...</main>
+	}
+
+	const questionGroups = {
+		technical: { label: 'Technical questions', items: report.technicalQuestions ?? [] },
+		behavioral: { label: 'Behavioral questions', items: report.behavioralQuestions ?? [] },
+		roadmap: { label: 'Road Map', items: report.preparationPlan ?? [] },
+	}
+	const activeGroup = questionGroups[activeSection]
+
+	return (
+		<main className="interview-page">
+			<section className="interview-shell">
+				<aside className="interview-sidebar" aria-label="Interview report sections">
+					<div className="report-brand">
+						<span className="report-brand-mark">AI</span>
+						<span>Interview plan</span>
+					</div>
+
+					<nav className="report-nav">
+						{Object.entries(questionGroups).map(([key, group]) => (
+							<button
+								className={activeSection === key ? 'is-active' : ''}
+								key={key}
+								type="button"
+								onClick={() => setActiveSection(key)}
+							>
+								{group.label}
+							</button>
+						))}
+					</nav>
+
+					<div className="sidebar-score">
+						<span>Profile match</span>
+						<strong>{report.matchScore}%</strong>
+					</div>
+				</aside>
+
+				<section className="interview-content">
+					<header className="content-header">
+						<div>
+							<span className="eyebrow">Personalized interview strategy</span>
+							<h1>{activeGroup.label}</h1>
+						</div>
+						<span className="question-count">{activeGroup.items.length} items</span>
+					</header>
+
+					<div className="content-list">
+						{activeSection === 'roadmap'
+							? activeGroup.items.map((item) => (
+									<article className="roadmap-card" key={item.day}>
+										<span className="roadmap-day">Day {item.day}</span>
+										<h2>{item.focus}</h2>
+										<ul>
+											{item.tasks.map((task) => <li key={task}>{task}</li>)}
+										</ul>
+									</article>
+								))
+							: activeGroup.items.map((item, index) => (
+									<article className="question-card" key={item.question}>
+										<div className="question-number">0{index + 1}</div>
+										<div>
+											<h2>{item.question}</h2>
+											<p className="question-intention"><strong>What this tests</strong>{item.intention}</p>
+											<p className="answer-label">Suggested answer</p>
+											<p className="answer-text">{item.answer}</p>
+										</div>
+									</article>
+								))}
+					</div>
+				</section>
+
+				<aside className="interview-insights">
+					<div className="score-card">
+						<span>Match score</span>
+						<strong>{report.matchScore}%</strong>
+						<div className="score-track"><span style={{ width: `${report.matchScore}%` }} /></div>
+						<small>Strong foundation for this role</small>
+					</div>
+
+					<section className="insight-section">
+						<h2>Skill Gaps</h2>
+						<div className="skill-list">
+							{report.skillGaps.map((gap) => (
+								<span className={`skill-tag ${gap.severity}`} key={gap.skill}>{gap.skill}</span>
+							))}
+						</div>
+					</section>
+
+					<section className="insight-section insight-summary">
+						<h2>Preparation focus</h2>
+						<p>Build confidence through practical testing, advanced state management, and security review.</p>
+					</section>
+				</aside>
+			</section>
+		</main>
+	)
+}
+
+export default Interview
