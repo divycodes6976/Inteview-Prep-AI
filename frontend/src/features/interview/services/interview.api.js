@@ -1,9 +1,9 @@
 import axios from "axios"
 
-const api= axios.create({
+const api = axios.create({
 
-    baseURL:"https://inteview-prep-ai.onrender.com/",
-    withCredentials:true,
+    baseURL: "http://localhost:3000/",
+    withCredentials: true,
 
 })
 /**
@@ -11,27 +11,27 @@ const api= axios.create({
  * @description This function generates an interview report based on the user's self-description, job description, and resume. It sends a POST request to the backend API with the provided data and returns the generated report.
  */
 
-export const generateInterviewReport = async ({selfDescription, jobDescription, resume}) => {
+export const generateInterviewReport = async ({ selfDescription, jobDescription, resume }) => {
 
-try{
+    try {
 
-    const formData = new FormData();
-    formData.append('selfDescription', selfDescription);
-    formData.append('jobDescription', jobDescription);
-    formData.append('resume', resume);
+        const formData = new FormData();
+        formData.append('selfDescription', selfDescription);
+        formData.append('jobDescription', jobDescription);
+        formData.append('resume', resume);
 
-    const response = await api.post("/api/interview/interview", formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
+        const response = await api.post("/api/interview/interview", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
 
-    return response.data.interviewReport ?? response.data;
+        return response.data.interviewReport ?? response.data;
 
-}catch(err){
-    console.error('Error in generateInterviewReport:', err);    
-    throw err;
-}
+    } catch (err) {
+        console.error('Error in generateInterviewReport:', err);
+        throw err;
+    }
 
 
 
@@ -57,7 +57,7 @@ export const getInterviewReportById = async (interviewId) => {
 
 export const getAllInterviewReports = async () => {
     try {
-        const response = await api.get("/api/interview/interviews");  
+        const response = await api.get("/api/interview/interviews");
         return response.data.interviewReports ?? response.data;
     } catch (err) {
         console.error('Error in getAllInterviewReports:', err);

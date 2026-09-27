@@ -30,7 +30,11 @@ const login= async(req,res)=>{
             email:user.email
         },process.env.JWT_SECRET,{expiresIn:"1h"});
 
-        res.cookie("token",token);
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+        });
 
         return res.status(200).json({message:"Login successful",user});
 
@@ -66,9 +70,11 @@ const register= async (req,res)=>{
     email:newUser.email
    },process.env.JWT_SECRET,{expiresIn:"1h"})
 
-   res.cookie("token",token)
-
-
+   res.cookie("token", token, {
+       httpOnly: true,
+       secure: true,
+       sameSite: "none",
+   });
 
    return res.status(201).json({message:"User registered successfully",user:newUser});
 
@@ -81,7 +87,11 @@ const register= async (req,res)=>{
 }
 
 const logout= (req,res)=>{
-    res.clearCookie("token");
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+    });
     return res.status(200).json({message:"Logout successful"});
 }
 
