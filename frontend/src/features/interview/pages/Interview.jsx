@@ -25,7 +25,7 @@ const Interview = () => {
 		if (interviewId) getReportById(interviewId)
 	}, [interviewId])
 
-	if (loading || !report) {
+	if (!report) {
 		return <main className="interview-page interview-state">Loading interview report...</main>
 	}
 

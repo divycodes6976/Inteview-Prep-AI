@@ -65,7 +65,6 @@ const getAllReports = async() => {
 }
 
 const getResumePdf = async(interviewId)=>{
-    setLoading(true);
     try{
         const response = await generateResumePdf({interviewId});
        
@@ -80,14 +79,9 @@ const getResumePdf = async(interviewId)=>{
         link.click();
         link.remove();
         window.URL.revokeObjectURL(url);
-       
-
-
     }catch(error){
         console.error("Error generating resume pdf:", error);
         throw error;
-    }finally{
-        setLoading(false);
     }
 }
 
