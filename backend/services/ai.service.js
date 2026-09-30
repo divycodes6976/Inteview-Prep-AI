@@ -61,18 +61,34 @@ async function geneateAIResponse({ resume, selfDescription, jobDescription }) {
 
 
 async function generatedPDFFromHtml(htmlContent) {
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-    const page = await browser.newPage();
+    let browser;
+    try {
+        browser = await puppeteer.launch({
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--no-zygote',
+                '--single-process'
+            ]
+        });
+        const page = await browser.newPage();
 
-    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+        await page.setContent(htmlContent, { waitUntil: 'networkidle0', timeout: 30000 });
 
-    const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+        const pdfBuffer = await page.pdf({ 
+            format: 'A4', 
+            printBackground: true 
+        });
 
-    await browser.close();
-    return pdfBuffer;
+        return pdfBuffer;
+    } finally {
+        if (browser) {
+            await browser.close();
+        }
+    }
 }
 
 // ai se html content create krrha rhe for puppeteer to generate pdf from html content

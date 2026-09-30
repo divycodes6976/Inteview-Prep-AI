@@ -93,24 +93,30 @@ const getAllInterviewReportsOfUser = async (req, res) => {
 
     // controller to generate pdf from html content
     const generatePdfFromHtmlController = async (req, res) => {
+        try {
+            const { interviewId } = req.params;
 
-        const {interviewId}=req.params;
+            const interviewReport = await interviewReportModel.findById({ _id: interviewId });
+            if (!interviewReport) {
+                return res.status(404).json({ message: "Interview report not found" });
+            }
 
-        const interviewReport= await interviewReportModel.findById({_id:interviewId});
-        if(!interviewReport){
-            return res.status(404).json({message:"Interview report not found"});
+            const { resumeText, selfDescription, jobDescription } = interviewReport;
+
+            const pdfBuffer = await generateResumePdf({ resume: resumeText, selfDescription, jobDescription });
+
+            res.set({
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=resume.pdf',
+            });
+            res.send(pdfBuffer);
+        } catch (error) {
+            console.error('Error in generatePdfFromHtmlController:', error);
+            res.status(500).json({ 
+                message: 'Failed to generate PDF', 
+                error: error.message 
+            });
         }
-
-        const {resumeText,selfDescription,jobDescription}=interviewReport;
-
-        const pdfBuffer= await generateResumePdf({resume:resumeText,selfDescription,jobDescription});
-   
-           res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; filename=resume.pdf',
-           })
-           res.send(pdfBuffer);
-
     }
 
 

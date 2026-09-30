@@ -19,6 +19,8 @@ dist/
 dist-ssr/
 build/
 out/
+.cache/
+**/.cache/
 
 # Logs
 logs/
