@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { generateInterviewReport, getInterviewReportById, getAllInterviewReports } from "../services/interview.api.js"
+import { generateInterviewReport, getInterviewReportById, getAllInterviewReports, generateResumePdf } from "../services/interview.api.js"
 import { InterviewContext } from "../interview.context.jsx";
 
 // custom hook bnaaya hai 
@@ -64,7 +64,34 @@ const getAllReports = async() => {
 
 }
 
-return  {loading, report, reports, generateReport, getReportById, getAllReports};
+const getResumePdf = async(interviewId)=>{
+    setLoading(true);
+    try{
+        const response = await generateResumePdf({interviewId});
+       
+        const blob = response instanceof Blob ? response : new Blob([response], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `resume_${interviewId}.pdf`);
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+       
+
+
+    }catch(error){
+        console.error("Error generating resume pdf:", error);
+        throw error;
+    }finally{
+        setLoading(false);
+    }
+}
+
+return  {loading, report, reports, generateReport, getReportById, getAllReports,getResumePdf};
 
 }
 

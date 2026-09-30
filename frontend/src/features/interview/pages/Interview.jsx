@@ -6,7 +6,20 @@ import '../style/interview.scss'
 const Interview = () => {
 	const [activeSection, setActiveSection] = useState('technical')
 	const { interviewId } = useParams()
-	const { loading, report, getReportById } = useInterview()
+	const { loading, report, getReportById, getResumePdf } = useInterview()
+	const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
+
+	const handleDownloadResume = async () => {
+		if (!interviewId || isGeneratingPdf) return
+		try {
+			setIsGeneratingPdf(true)
+			await getResumePdf(interviewId)
+		} catch (err) {
+			alert('Failed to generate resume PDF. Please try again.')
+		} finally {
+			setIsGeneratingPdf(false)
+		}
+	}
 
 	useEffect(() => {
 		if (interviewId) getReportById(interviewId)
@@ -45,9 +58,44 @@ const Interview = () => {
 						))}
 					</nav>
 
-					<div className="sidebar-score">
-						<span>Profile match</span>
-						<strong>{report.matchScore}%</strong>
+					<div className="sidebar-footer">
+						<div className="sidebar-score">
+							<span>Profile match</span>
+							<strong>{report.matchScore}%</strong>
+						</div>
+
+						<button
+							className="generate-pdf-btn"
+							type="button"
+							onClick={handleDownloadResume}
+							disabled={isGeneratingPdf}
+						>
+							{isGeneratingPdf ? (
+								<>
+									<span className="pdf-spinner" aria-hidden="true" />
+									<span>Generating PDF...</span>
+								</>
+							) : (
+								<>
+									<svg
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										aria-hidden="true"
+									>
+										<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+										<polyline points="7 10 12 15 17 10" />
+										<line x1="12" y1="15" x2="12" y2="3" />
+									</svg>
+									<span>Generate Resume PDF</span>
+								</>
+							)}
+						</button>
 					</div>
 				</aside>
 

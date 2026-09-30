@@ -1,6 +1,7 @@
-const geneateAIResponse = require('../services/ai.service.js');
+const {generatePDFFromHtml, geneateAIResponse,generateResumePdf} = require('../services/ai.service.js');
 const interviewReportModel = require('../models/interviewReport.model.js');
 const { PDFParse } = require('pdf-parse');
+
 // controller to generate interview report based on user self description, job description and resume
 const interviewController = async (req, res) => {
     try {
@@ -90,8 +91,32 @@ const getAllInterviewReportsOfUser = async (req, res) => {
     }
 
 
+    // controller to generate pdf from html content
+    const generatePdfFromHtmlController = async (req, res) => {
+
+        const {interviewId}=req.params;
+
+        const interviewReport= await interviewReportModel.findById({_id:interviewId});
+        if(!interviewReport){
+            return res.status(404).json({message:"Interview report not found"});
+        }
+
+        const {resumeText,selfDescription,jobDescription}=interviewReport;
+
+        const pdfBuffer= await generateResumePdf({resume:resumeText,selfDescription,jobDescription});
+   
+           res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename=resume.pdf',
+           })
+           res.send(pdfBuffer);
+
+    }
+
+
 module.exports = {
     interviewController,
     getInterviewReportById,
     getAllInterviewReportsOfUser,
+    generatePdfFromHtmlController,
 };

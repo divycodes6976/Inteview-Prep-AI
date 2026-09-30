@@ -1,16 +1,21 @@
 .interview-page {
-  min-height: 100dvh;
-  padding: 24px;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
   color: #e5e7eb;
   background: radial-gradient(ellipse 70% 55% at 50% -20%, rgba(168, 85, 247, 0.1), transparent 65%), #0b0c0e;
 }
 
 .interview-shell {
   width: min(1440px, 100%);
-  min-height: calc(100dvh - 48px);
+  height: 100%;
+  max-height: 100%;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr) 260px;
+  grid-template-columns: 230px minmax(0, 1fr) 270px;
+  grid-template-rows: 100%;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 22px;
@@ -20,21 +25,125 @@
 
 .interview-sidebar,
 .interview-insights {
-  padding: 28px 22px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 24px 20px;
   background: rgba(15, 17, 21, 0.72);
+  overflow-y: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-.interview-sidebar { display: flex; flex-direction: column; border-right: 1px solid rgba(255, 255, 255, 0.1); }
-.interview-insights { border-left: 1px solid rgba(255, 255, 255, 0.1); }
+.interview-sidebar {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.interview-insights {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .report-brand { display: flex; align-items: center; gap: 10px; color: #f8fafc; font-size: 0.92rem; font-weight: 800; text-transform: capitalize; }
 .report-brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; color: #fff; background: #f43f5e; font-size: 0.72rem; }
-.report-nav { display: grid; gap: 6px; margin-top: 72px; }
+.report-nav { display: grid; gap: 6px; margin-top: clamp(24px, 4vh, 48px); }
 .report-nav button { padding: 12px 10px; border: 0; border-radius: 8px; color: #9aa3b2; background: transparent; font: inherit; font-size: 0.84rem; text-align: left; cursor: pointer; }
 .report-nav button:hover, .report-nav button.is-active { color: #fff; background: rgba(244, 63, 94, 0.14); }
 .report-nav button.is-active { box-shadow: inset 3px 0 #f43f5e; }
-.sidebar-score { display: grid; gap: 6px; margin-top: auto; padding-top: 24px; color: #6b7280; font-size: 0.74rem; }
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.sidebar-score { display: grid; gap: 6px; color: #6b7280; font-size: 0.74rem; }
 .sidebar-score strong { color: #fb7185; font-size: 2rem; line-height: 1; }
-.interview-content { min-width: 0; padding: 32px clamp(22px, 4vw, 58px); overflow-y: auto; }
+
+.generate-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, #f43f5e, #be123c);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.28);
+  transition: all 0.2s ease-in-out;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #fb7185, #e11d48);
+    box-shadow: 0 6px 20px rgba(244, 63, 94, 0.42);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(244, 63, 94, 0.25);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    filter: grayscale(0.2);
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.pdf-spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: pdf-spin 0.75s linear infinite;
+}
+
+@keyframes pdf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.interview-content {
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 32px clamp(20px, 3.5vw, 54px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 63, 94, 0.45) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(244, 63, 94, 0.35);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #f43f5e;
+    }
+  }
+}
 .content-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
 .eyebrow { color: #fb7185; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
 .content-header h1 { margin: 8px 0 0; color: #f8fafc; font-size: clamp(1.45rem, 2.4vw, 2.1rem); line-height: 1.1; }
@@ -66,18 +175,47 @@
 .insight-summary p { margin: 0; color: #9aa3b2; font-size: 0.8rem; line-height: 1.6; }
 
 @media (max-width: 980px) {
-  .interview-shell { grid-template-columns: 180px minmax(0, 1fr); }
+  .interview-shell { grid-template-columns: 200px minmax(0, 1fr); }
   .interview-insights { display: none; }
 }
 
 @media (max-width: 640px) {
-  .interview-page { padding: 10px; }
-  .interview-shell { min-height: calc(100dvh - 20px); grid-template-columns: 1fr; }
-  .interview-sidebar { border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 16px; }
+  .interview-page {
+    height: auto;
+    min-height: 100dvh;
+    max-height: none;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  .interview-shell {
+    height: auto;
+    max-height: none;
+    min-height: calc(100dvh - 20px);
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .interview-sidebar {
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    overflow-y: visible;
+  }
+  .interview-insights {
+    height: auto;
+    border-left: 0;
+    overflow-y: visible;
+  }
   .report-nav { grid-template-columns: repeat(3, 1fr); margin-top: 16px; }
   .report-nav button { text-align: center; font-size: 0.72rem; }
   .sidebar-score { display: none; }
-  .interview-content { padding: 24px 16px; }
+  .sidebar-footer { margin-top: 14px; padding-top: 0; }
+  .generate-pdf-btn { padding: 9px 12px; font-size: 0.76rem; }
+  .interview-content {
+    height: auto;
+    overflow-y: visible;
+    padding: 24px 16px;
+  }
   .content-header { align-items: flex-start; flex-direction: column; gap: 10px; }
   .question-card { grid-template-columns: 1fr; gap: 10px; padding: 16px; }
 }
