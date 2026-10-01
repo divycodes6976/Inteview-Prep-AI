@@ -218,4 +218,119 @@
   }
   .content-header { align-items: flex-start; flex-direction: column; gap: 10px; }
   .question-card { grid-template-columns: 1fr; gap: 10px; padding: 16px; }
+
+  .interview-shell.is-skeleton {
+    .skeleton-nav {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 16px;
+    }
+    .skeleton-score {
+      display: none;
+    }
+  }
 }
+
+/* Skeleton Loading State */
+.interview-shell.is-skeleton {
+  pointer-events: none;
+  user-select: none;
+
+  .skeleton-bar,
+  .skeleton-score,
+  .skeleton-btn,
+  .skeleton-pill,
+  .skeleton-heading,
+  .skeleton-badge,
+  .skeleton-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.06),
+        transparent
+      );
+      animation: skeletonShimmer 1.6s infinite;
+    }
+  }
+
+  .skeleton-nav {
+    display: grid;
+    gap: 8px;
+    margin-top: clamp(24px, 4vh, 48px);
+
+    .skeleton-bar {
+      height: 40px;
+      border-radius: 8px;
+
+      &.is-active {
+        background: rgba(244, 63, 94, 0.12);
+        border-left: 3px solid #f43f5e;
+      }
+    }
+  }
+
+  .skeleton-score {
+    height: 56px;
+    border-radius: 12px;
+  }
+
+  .skeleton-btn {
+    height: 42px;
+    border-radius: 10px;
+  }
+
+  .skeleton-pill {
+    width: 140px;
+    height: 14px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+  }
+
+  .skeleton-heading {
+    width: 240px;
+    height: 30px;
+    border-radius: 6px;
+  }
+
+  .skeleton-badge {
+    width: 68px;
+    height: 24px;
+    border-radius: 999px;
+  }
+
+  .skeleton-card {
+    height: 140px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    &.skeleton-score-card {
+      height: 120px;
+      margin-bottom: 24px;
+    }
+
+    &.skeleton-skill-card {
+      height: 160px;
+      margin-bottom: 24px;
+    }
+
+    &.skeleton-summary-card {
+      height: 110px;
+    }
+  }
+}
+
+@keyframes skeletonShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+

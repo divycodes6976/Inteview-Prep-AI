@@ -50,7 +50,6 @@ const getReportById = async(interviewId) => {
 }
 
 const getAllReports = async() => {
-    setLoading(true);
     try{
         const response = await getAllInterviewReports();
         setReports(response);
@@ -58,10 +57,7 @@ const getAllReports = async() => {
     }catch(error){
         console.error("Error fetching all reports:", error);
         throw error;
-    }finally{
-        setLoading(false);
     }
-
 }
 
 const getResumePdf = async(interviewId)=>{

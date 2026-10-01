@@ -40,10 +40,6 @@ const Home = () => {
     } catch (error) {
       alert('Unable to generate the interview plan. Please try again.')
     }
-
-  }
-  if(loading){
-    return <div>Loading your interview Plan...</div>
   }
 
   return (
@@ -51,6 +47,16 @@ const Home = () => {
       <InterviewHero />
 
       <section className="plan-card">
+        {loading && (
+          <div className="plan-generating-overlay" role="status" aria-live="polite">
+            <div className="generating-card">
+              <div className="generating-spinner" />
+              <h3>Crafting Your Interview Strategy...</h3>
+              <p>Analyzing job requirements, mapping skills & curating tailored questions</p>
+            </div>
+          </div>
+        )}
+
         <div className="plan-grid">
           <JobDescriptionPanel
             value={jobDescription}

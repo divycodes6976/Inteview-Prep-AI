@@ -25,8 +25,52 @@ const Interview = () => {
 		if (interviewId) getReportById(interviewId)
 	}, [interviewId])
 
-	if (!report) {
-		return <main className="interview-page interview-state">Loading interview report...</main>
+	if (loading || !report || (interviewId && report._id !== interviewId)) {
+		return (
+			<main className="interview-page">
+				<section className="interview-shell is-skeleton" aria-busy="true" aria-label="Loading interview report">
+					<aside className="interview-sidebar">
+						<div className="report-brand">
+							<span className="report-brand-mark">AI</span>
+							<span>Interview plan</span>
+						</div>
+
+						<div className="skeleton-nav">
+							<div className="skeleton-bar is-active" />
+							<div className="skeleton-bar" />
+							<div className="skeleton-bar" />
+						</div>
+
+						<div className="sidebar-footer">
+							<div className="skeleton-score" />
+							<div className="skeleton-btn" />
+						</div>
+					</aside>
+
+					<section className="interview-content">
+						<header className="content-header">
+							<div>
+								<div className="skeleton-pill" />
+								<div className="skeleton-heading" />
+							</div>
+							<div className="skeleton-badge" />
+						</header>
+
+						<div className="content-list">
+							<div className="skeleton-card" />
+							<div className="skeleton-card" />
+							<div className="skeleton-card" />
+						</div>
+					</section>
+
+					<aside className="interview-insights">
+						<div className="skeleton-card skeleton-score-card" />
+						<div className="skeleton-card skeleton-skill-card" />
+						<div className="skeleton-card skeleton-summary-card" />
+					</aside>
+				</section>
+			</main>
+		)
 	}
 
 	const questionGroups = {

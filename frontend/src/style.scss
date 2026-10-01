@@ -20,3 +20,28 @@ button,
 input {
   font: inherit;
 }
+
+.auth-loading-screen {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0b0c0e;
+}
+
+.auth-loading-spinner {
+  width: 38px;
+  height: 38px;
+  border: 3px solid rgba(244, 63, 94, 0.2);
+  border-top-color: #f43f5e;
+  border-right-color: #c084fc;
+  border-radius: 50%;
+  animation: authSpin 0.75s linear infinite;
+}
+
+@keyframes authSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

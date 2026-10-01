@@ -20,9 +20,6 @@ const Register = () => {
         navigate('/')
 
  }
-    if(loading){
-        return <div>Loading...</div>
-    }
   return (
     <main className="auth-form">
       <h1>Register</h1>
@@ -53,7 +50,9 @@ const Register = () => {
            type="password" name="password" id="password" placeholder="Create a password" />
         </div>
 
-        <button type="submit" className="btn">Register</button>
+        <button type="submit" className="btn" disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
+        </button>
       </form>
       <p>Already have an account ? <Link to="/login">Login</Link></p>
     </main>
